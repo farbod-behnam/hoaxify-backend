@@ -2,6 +2,7 @@ package com.hoaxify.hoaxify;
 
 import com.hoaxify.hoaxify.entities.AppUser;
 import com.hoaxify.hoaxify.repositories.UserRepository;
+import com.hoaxify.hoaxify.shared.GenericResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,6 +50,15 @@ public class UserControllerTest {
         testRestTemplate.postForEntity(API_V_1_0_USERS, user, Object.class);
         assertThat(userRepository.count()).isEqualTo(1);
     }
+
+    @Test
+    public void postUser_whenUserIsValid_receiveSuccessMessage() {
+        AppUser user = createValidUser();
+        ResponseEntity<GenericResponse> response = testRestTemplate.postForEntity(API_V_1_0_USERS, user, GenericResponse.class);
+        assertThat(response.getBody().getMessage()).isNotNull();
+    }
+
+
 
     private AppUser createValidUser() {
         AppUser user = new AppUser();
